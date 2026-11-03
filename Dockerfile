@@ -1,16 +1,15 @@
-FROM debian:bookworm-slim
-
-ENV DEBIAN_FRONTEND=noninteractive
+FROM archlinux:base
 
 # Install SSH server + tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    openssh-server \
+RUN pacman -Sy --noconfirm && pacman -S --noconfirm --needed \
+    openssh \
     sudo \
-    procps \
-    passwd \
+    procps-ng \
+    shadow \
     ca-certificates \
-    && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /var/run/sshd
+    && rm -rf /var/cache/pacman/pkg/* \
+    && mkdir -p /var/run/sshd \
+    && ssh-keygen -A
 
 # SSH config default (akan di-override oleh ssh-user-config.sh)
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
