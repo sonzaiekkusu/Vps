@@ -7,9 +7,11 @@ RUN pacman -Sy --noconfirm && pacman -S --noconfirm --needed \
     procps-ng \
     shadow \
     ca-certificates \
+    tzdata \
     && rm -rf /var/cache/pacman/pkg/* \
     && mkdir -p /var/run/sshd \
-    && ssh-keygen -A
+    && ssh-keygen -A \
+    && ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 
 # SSH config default (akan di-override oleh ssh-user-config.sh)
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
